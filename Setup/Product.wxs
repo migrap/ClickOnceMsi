@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+	<Product Id="*" Name="Setup" Language="1033" Version="1.0.0.0" Manufacturer="{Manufacturer}" UpgradeCode="49894cc7-c5d8-4031-9cf3-adaf586ee38e">
+		<Package InstallerVersion="200" Compressed="yes" InstallScope="perUser" />
+
+		<MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
+		<MediaTemplate />
+
+    <Binary Id="ClickOnceAction" SourceFile="$(var.SetupActions.TargetDir)SetupActions.CA.dll" />
+    <Property Id="DeploymentManifest" Value="{DeploymentManifest}"/>
+    <CustomAction Id="DownloadApplication" Return="check" Execute="immediate" BinaryKey="ClickOnceAction" DllEntry="DownloadApplication" HideTarget="no"/>
+    <CustomAction Id="CheckApplicationExists" Return="check" Execute="immediate" BinaryKey="ClickOnceAction" DllEntry="CheckApplicationExists" HideTarget="no"/>
+    
+    <InstallExecuteSequence>
+      <Custom Action="CheckApplicationExists" After="AppSearch"/>
+      <Custom Action="DownloadApplication" After="CheckApplicationExists"/>
+    </InstallExecuteSequence>
+  </Product>	
+</Wix>
